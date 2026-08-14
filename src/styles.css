@@ -49,6 +49,10 @@
   --color-mint-foreground: var(--mint-foreground);
   --color-surface-alt: var(--surface-alt);
   --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 }
