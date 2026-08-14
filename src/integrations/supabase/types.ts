@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      actions: {
+        Row: {
+          blocked_by: string | null
+          blocked_by_label: string | null
+          category: string
+          created_at: string
+          deadline: string | null
+          document_id: string | null
+          id: string
+          position: number
+          relevance_reason: string
+          relevance_score: number
+          risk_explanation: string
+          risk_level: string
+          section: string
+          source_quote: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blocked_by?: string | null
+          blocked_by_label?: string | null
+          category?: string
+          created_at?: string
+          deadline?: string | null
+          document_id?: string | null
+          id?: string
+          position?: number
+          relevance_reason?: string
+          relevance_score?: number
+          risk_explanation?: string
+          risk_level?: string
+          section?: string
+          source_quote?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blocked_by?: string | null
+          blocked_by_label?: string | null
+          category?: string
+          created_at?: string
+          deadline?: string | null
+          document_id?: string | null
+          id?: string
+          position?: number
+          relevance_reason?: string
+          relevance_score?: number
+          risk_explanation?: string
+          risk_level?: string
+          section?: string
+          source_quote?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_blocked_by_fkey"
+            columns: ["blocked_by"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          file_type: string
+          id: string
+          raw_text: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_type?: string
+          id?: string
+          raw_text?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_type?: string
+          id?: string
+          raw_text?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       habit_logs: {
         Row: {
           created_at: string
@@ -85,21 +196,30 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          branch: string | null
           created_at: string
           display_name: string | null
           id: string
+          specialization: string | null
+          year: string | null
         }
         Insert: {
           avatar_url?: string | null
+          branch?: string | null
           created_at?: string
           display_name?: string | null
           id: string
+          specialization?: string | null
+          year?: string | null
         }
         Update: {
           avatar_url?: string | null
+          branch?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          specialization?: string | null
+          year?: string | null
         }
         Relationships: []
       }
