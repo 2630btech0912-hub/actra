@@ -20,6 +20,7 @@ export const Route = createRootRoute({
       { name: "twitter:description", content: "Actra turns notices and circulars into ranked, deadline-aware actions." },
     ],
     links: [
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",

@@ -10,6 +10,10 @@ async function getSupabase() {
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  validateSearch: (s: Record<string, unknown>): { next?: string } => {
+    const next = typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined;
+    return next ? { next } : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in — Actra" },
@@ -24,6 +28,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,12 +41,13 @@ function LoginPage() {
     try {
       const { lovable } = await import("@/integrations/lovable/index");
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: next ? `${window.location.origin}${next}` : window.location.origin,
       });
       if (result.error) {
         toast.error(result.error instanceof Error ? result.error.message : "Google sign-in failed");
       } else if (!result.redirected) {
-        navigate({ to: "/dashboard" });
+        if (next) window.location.href = next;
+        else navigate({ to: "/dashboard" });
       }
     } catch (err: any) {
       toast.error(err.message || "Google sign-in failed");
@@ -61,7 +67,7 @@ function LoginPage() {
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: { emailRedirectTo: next ? `${window.location.origin}${next}` : window.location.origin },
         });
         if (error) throw error;
         toast.success("Check your email to confirm your account");
@@ -71,7 +77,8 @@ function LoginPage() {
           password,
         });
         if (error) throw error;
-        navigate({ to: "/dashboard" });
+        if (next) window.location.href = next;
+        else navigate({ to: "/dashboard" });
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");

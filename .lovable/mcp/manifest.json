@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://cbaluvqzaibisjmbghvs.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "remix-of-daily-habit-tracker",
+      "version": "0.1.0",
+      "title": "Remix of Daily Habit Tracker"
+    },
+    "tools": [
+      {
+        "name": "list_actions",
+        "title": "List actions",
+        "description": "List the signed-in user's extracted actions, optionally filtered by section (do_today, coming_up, fyi), status or risk level.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "section": {
+              "description": "Dashboard section filter.",
+              "type": "string",
+              "enum": [
+                "do_today",
+                "coming_up",
+                "fyi"
+              ]
+            },
+            "status": {
+              "description": "Task status filter.",
+              "type": "string",
+              "enum": [
+                "pending",
+                "in_progress",
+                "completed"
+              ]
+            },
+            "risk_level": {
+              "description": "Risk level filter.",
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            },
+            "limit": {
+              "description": "Max rows to return (default 50).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_action",
+        "title": "Create action",
+        "description": "Create a new action item for the signed-in user, with deadline, risk level and relevance details.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Short action title."
+            },
+            "category": {
+              "description": "Category badge, e.g. Fees, Exams, Placements.",
+              "type": "string",
+              "minLength": 1
+            },
+            "section": {
+              "description": "Dashboard section. Defaults to coming_up.",
+              "type": "string",
+              "enum": [
+                "do_today",
+                "coming_up",
+                "fyi"
+              ]
+            },
+            "deadline": {
+              "description": "Deadline as an ISO date/time string.",
+              "type": "string"
+            },
+            "risk_level": {
+              "description": "Risk level. Defaults to LOW.",
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            },
+            "risk_explanation": {
+              "description": "Why this risk level was assigned.",
+              "type": "string"
+            },
+            "relevance_score": {
+              "description": "Relevance score 0-100.",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "relevance_reason": {
+              "description": "Why this action is relevant to the user.",
+              "type": "string"
+            },
+            "source_quote": {
+              "description": "Verbatim snippet from the source notice.",
+              "type": "string"
+            },
+            "document_id": {
+              "description": "Source document id, if any.",
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "title"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_action_status",
+        "title": "Update action status",
+        "description": "Set an action's status to pending, in_progress or completed for the signed-in user.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "action_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The action's id."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "in_progress",
+                "completed"
+              ],
+              "description": "New status."
+            }
+          },
+          "required": [
+            "action_id",
+            "status"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_documents",
+        "title": "List documents",
+        "description": "List the signed-in user's uploaded notices and documents, newest first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "Max rows to return (default 25).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "include_text": {
+              "description": "Include the full raw text of each document.",
+              "type": "boolean"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "add_document",
+        "title": "Add document",
+        "description": "Store a notice or document (raw text) for the signed-in user so actions can be extracted from it.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Document title."
+            },
+            "raw_text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Full text content of the notice."
+            },
+            "file_type": {
+              "description": "Source type, e.g. text, pdf, png. Defaults to text.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "raw_text"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_profile",
+        "title": "Get profile",
+        "description": "Read the signed-in user's academic profile (name, year, branch, specialization) used for relevance scoring.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
