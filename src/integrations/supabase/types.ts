@@ -84,6 +84,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "actions_blocked_by_fkey"
+            columns: ["blocked_by"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "actions_document_id_fkey"
             columns: ["document_id"]
             isOneToOne: false
@@ -225,7 +232,56 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      tasks: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          deadline: string | null
+          document_id: string | null
+          id: string | null
+          risk: string | null
+          risk_reason: string | null
+          status: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          document_id?: string | null
+          id?: string | null
+          risk?: string | null
+          risk_reason?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          document_id?: string | null
+          id?: string | null
+          risk?: string | null
+          risk_reason?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
